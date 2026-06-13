@@ -16,8 +16,8 @@ Starting main commit: 4114587199a4ee6219f4a72979c80f0fc8aa372e
 |---|---:|---|---|---|---|
 | GitHub description/topics set | 100% | done | `gh repo view` confirms target description and 10 topics | Codex | None |
 | Social preview uploaded | 100% | manual | `assets/social-preview.svg` exists; upload instructions in `docs/social-preview-upload.md` | Human | Export/upload preview image in GitHub settings |
-| CI warning cleanup | 100% | done | CI run https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27456198494 succeeded after workflow update | Codex | Watch CI after this checklist commit |
-| Remote install retest | 2 environments | partial | Local Windows retest succeeded; post-release smoke workflow pending | Codex | Push and run `post-release-smoke` |
+| CI warning cleanup | 100% | done | CI run https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27456791364 succeeded on checklist commit | Codex | None |
+| Remote install retest | 2 environments | done | Local Windows retest plus smoke run https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27456803212 | Codex | None |
 | Launch post prepared/sent | 2-3 channels | prepared | Drafts in `docs/48h-launch-posts.md` | Human | Manually post and capture URLs |
 | Real repo scans | 3 repos | done | 3 public repos scanned; see `docs/real-scan-log.md` | Codex | None |
 
@@ -50,27 +50,40 @@ Current workflow state:
 - `.github/workflows/release.yml` uses `actions/checkout@v6` and preserves `cli/gh-extension-precompile@v2`.
 - No release tag was changed.
 
-Latest verified CI run before this checklist work:
+Latest verified CI run for this checklist work:
 
-- https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27456198494
+- https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27456791364
 - conclusion: success
-- head commit: 4114587199a4ee6219f4a72979c80f0fc8aa372e
+- head commit: dea930f84a0d2546487f1247f71754d7549b6b34
 
 ## Post-Release Smoke
 
 Workflow file: `.github/workflows/post-release-smoke.yml`
 
-Status: pending push and workflow run.
+Status: done.
 
-Expected environments:
+Run:
 
-- `ubuntu-latest`
-- `windows-latest`
-- `macos-latest`
+- https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27456803212
+- conclusion: success
+- head commit: dea930f84a0d2546487f1247f71754d7549b6b34
+
+Environments:
+
+- `ubuntu-latest`: success
+- `windows-latest`: success
+- `macos-latest`: success
+
+Each environment ran:
+
+- `gh --version`
+- `gh extension install Frank-Li-Yixuan/gh-flakefinder`
+- `gh flakefinder --help`
+- `gh flakefinder scan --repo Frank-Li-Yixuan/gh-flakefinder --days 30 --limit 100 --format table`
 
 ## Local Remote Install Retest
 
-Status: local environment complete; GitHub-hosted smoke pending.
+Status: complete.
 
 Commands:
 

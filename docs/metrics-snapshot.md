@@ -1,6 +1,6 @@
 # Metrics Snapshot
 
-Snapshot time: 2026-06-13T12:38:18+08:00
+Snapshot time: 2026-06-13T12:41:13+08:00
 
 Repository: https://github.com/Frank-Li-Yixuan/gh-flakefinder
 
@@ -15,7 +15,7 @@ Release: https://github.com/Frank-Li-Yixuan/gh-flakefinder/releases/tag/v0.1.0
 | Watchers | 0 |
 | Open issues | 0 |
 | Total issues | 0 |
-| Latest main commit | 4114587199a4ee6219f4a72979c80f0fc8aa372e |
+| Latest main commit | dea930f84a0d2546487f1247f71754d7549b6b34 |
 
 ## Release Metrics
 
@@ -45,11 +45,12 @@ Release:
 
 | Workflow/run | Status | Conclusion | URL |
 |---|---|---|---|
+| post-release-smoke / 27456803212 | completed | success | https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27456803212 |
+| ci / 27456791364 | completed | success | https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27456791364 |
 | ci / 27456198494 | completed | success | https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27456198494 |
 | ci / 27453714709 | completed | success | https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27453714709 |
 | release / 27452923842 | completed | success | https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27452923842 |
 | release / 27452878902 | completed | success | https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27452878902 |
-| ci / 27452869903 | completed | success | https://github.com/Frank-Li-Yixuan/gh-flakefinder/actions/runs/27452869903 |
 
 ## Traffic API Results
 
