@@ -1,0 +1,132 @@
+{
+  "repository": "owner/repo",
+  "workflow_runs": [
+    {
+      "id": 1001,
+      "run_attempt": 1,
+      "name": "CI",
+      "workflow_id": 10,
+      "event": "push",
+      "head_sha": "abc1234567890abcdef",
+      "head_branch": "main",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-06-10T10:00:00Z",
+      "updated_at": "2026-06-10T10:05:00Z",
+      "html_url": "https://github.com/owner/repo/actions/runs/1001"
+    },
+    {
+      "id": 1002,
+      "run_attempt": 1,
+      "name": "CI",
+      "workflow_id": 10,
+      "event": "push",
+      "head_sha": "abc1234567890abcdef",
+      "head_branch": "main",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-06-10T10:10:00Z",
+      "updated_at": "2026-06-10T10:14:00Z",
+      "html_url": "https://github.com/owner/repo/actions/runs/1002"
+    },
+    {
+      "id": 2001,
+      "run_attempt": 1,
+      "name": "Build",
+      "workflow_id": 20,
+      "event": "pull_request",
+      "head_sha": "def9876543210abcdef",
+      "head_branch": "feature/flaky",
+      "status": "completed",
+      "conclusion": "timed_out",
+      "created_at": "2026-06-11T08:00:00Z",
+      "updated_at": "2026-06-11T08:30:00Z",
+      "html_url": "https://github.com/owner/repo/actions/runs/2001"
+    },
+    {
+      "id": 2002,
+      "run_attempt": 1,
+      "name": "Build",
+      "workflow_id": 20,
+      "event": "pull_request",
+      "head_sha": "def9876543210abcdef",
+      "head_branch": "feature/flaky",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-06-11T08:35:00Z",
+      "updated_at": "2026-06-11T08:42:00Z",
+      "html_url": "https://github.com/owner/repo/actions/runs/2002"
+    },
+    {
+      "id": 3001,
+      "run_attempt": 1,
+      "name": "Lint",
+      "workflow_id": 30,
+      "event": "push",
+      "head_sha": "999999999999999999",
+      "head_branch": "main",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-06-12T09:00:00Z",
+      "updated_at": "2026-06-12T09:02:00Z",
+      "html_url": "https://github.com/owner/repo/actions/runs/3001"
+    }
+  ],
+  "workflow_jobs": [
+    {
+      "id": 5001,
+      "run_id": 1001,
+      "run_attempt": 1,
+      "name": "test-node-20-linux",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-06-10T10:01:00Z",
+      "completed_at": "2026-06-10T10:04:00Z",
+      "html_url": "https://github.com/owner/repo/actions/runs/1001/job/5001"
+    },
+    {
+      "id": 5002,
+      "run_id": 1002,
+      "run_attempt": 1,
+      "name": "test-node-20-linux",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-06-10T10:11:00Z",
+      "completed_at": "2026-06-10T10:13:00Z",
+      "html_url": "https://github.com/owner/repo/actions/runs/1002/job/5002"
+    },
+    {
+      "id": 6001,
+      "run_id": 2001,
+      "run_attempt": 1,
+      "name": "integration",
+      "status": "completed",
+      "conclusion": "timed_out",
+      "started_at": "2026-06-11T08:05:00Z",
+      "completed_at": "2026-06-11T08:29:00Z",
+      "html_url": "https://github.com/owner/repo/actions/runs/2001/job/6001"
+    },
+    {
+      "id": 6002,
+      "run_id": 2002,
+      "run_attempt": 1,
+      "name": "integration",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-06-11T08:36:00Z",
+      "completed_at": "2026-06-11T08:41:00Z",
+      "html_url": "https://github.com/owner/repo/actions/runs/2002/job/6002"
+    },
+    {
+      "id": 7001,
+      "run_id": 3001,
+      "run_attempt": 1,
+      "name": "lint",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-06-12T09:00:00Z",
+      "completed_at": "2026-06-12T09:01:00Z",
+      "html_url": "https://github.com/owner/repo/actions/runs/3001/job/7001"
+    }
+  ]
+}

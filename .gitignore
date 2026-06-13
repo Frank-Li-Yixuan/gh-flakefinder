@@ -1,0 +1,6 @@
+/gh-flakefinder
+/gh-flakefinder.exe
+/dist/
+*.test
+coverage.out
+PROGRESS.md
