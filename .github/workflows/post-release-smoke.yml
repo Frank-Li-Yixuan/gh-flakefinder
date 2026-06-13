@@ -1,0 +1,31 @@
+name: post-release-smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  remote-install:
+    name: Remote install on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Show gh version
+        run: gh --version
+
+      - name: Install released extension
+        run: gh extension install Frank-Li-Yixuan/gh-flakefinder
+
+      - name: Show extension help
+        run: gh flakefinder --help
+
+      - name: Live scan released repo
+        run: gh flakefinder scan --repo Frank-Li-Yixuan/gh-flakefinder --days 30 --limit 100 --format table
