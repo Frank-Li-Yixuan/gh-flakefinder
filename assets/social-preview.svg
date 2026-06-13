@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
+  <title id="title">gh-flakefinder social preview</title>
+  <desc id="desc">Find GitHub Actions jobs that fail, get rerun, and mysteriously pass.</desc>
+  <rect width="1280" height="640" fill="#101820"/>
+  <rect x="72" y="72" width="1136" height="496" rx="28" fill="#16222e" stroke="#2f4858" stroke-width="3"/>
+  <text x="118" y="162" fill="#9be7c4" font-family="Consolas, Menlo, monospace" font-size="34">gh extension install Frank-Li-Yixuan/gh-flakefinder</text>
+  <text x="118" y="258" fill="#ffffff" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="64" font-weight="700">gh-flakefinder</text>
+  <text x="118" y="326" fill="#d6e3ea" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="38">Find Actions jobs that fail, get rerun,</text>
+  <text x="118" y="376" fill="#d6e3ea" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="38">and mysteriously pass.</text>
+  <g font-family="Consolas, Menlo, monospace" font-size="28">
+    <text x="118" y="472" fill="#ffb4a2">failure</text>
+    <text x="245" y="472" fill="#d6e3ea">-&gt;</text>
+    <text x="305" y="472" fill="#9be7c4">success</text>
+    <text x="466" y="472" fill="#7aa6c2">with evidence links</text>
+  </g>
+  <text x="118" y="526" fill="#8fa9b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="24">Read-only by default. Table, JSON, and Markdown reports.</text>
+</svg>

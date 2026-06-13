@@ -1,65 +1,88 @@
 # gh-flakefinder
 
-Find flaky GitHub Actions runs before they waste another hour.
+Find GitHub Actions jobs that fail, get rerun, and mysteriously pass.
 
-`gh-flakefinder` is a GitHub CLI extension that scans recent GitHub Actions workflow and job history for likely flaky CI signals, such as the same commit failing and then passing after a rerun.
-
-It is read-only by default, requires no workflow changes, and can generate table, JSON, or issue-ready Markdown reports.
-
-## Install
-
-From a published repository:
+`gh-flakefinder` is a GitHub CLI extension for maintainers who want a quick, evidence-backed view of likely flaky workflow or job runs. It scans recent GitHub Actions history and reports cases where the same commit, workflow, or job failed and later passed.
 
 ```bash
 gh extension install Frank-Li-Yixuan/gh-flakefinder
 ```
 
-For local development from this checkout:
+```bash
+gh flakefinder scan --repo owner/repo --days 30
+```
+
+> Safety note: `scan` is read-only by default. It does not modify workflows, rerun jobs, create issues, post comments, or send telemetry. The only write path is `gh flakefinder issue --create`, which must be passed explicitly.
+
+## Before / After
+
+Before:
+
+- CI fails on a PR that did not touch the failing area.
+- Someone clicks rerun.
+- The job turns green.
+- The failure disappears from the review flow, and nobody records the pattern.
+
+After:
+
+- Run `gh flakefinder scan`.
+- Get a compact list of workflow/job suspects.
+- Copy Markdown evidence into an issue or incident note.
+- Decide whether to investigate tests, runner capacity, network calls, or dependencies.
+
+## 30-Second Demo
+
+Try the deterministic fixture demo:
 
 ```bash
-go build -o gh-flakefinder ./cmd/gh-flakefinder
+git clone https://github.com/Frank-Li-Yixuan/gh-flakefinder.git
+cd gh-flakefinder
 gh extension install .
+gh flakefinder scan --fixture testdata/workflow_runs.json --format table
 ```
 
-After installation, run the extension as:
+Example output:
 
-```bash
-gh flakefinder --help
+```text
+Suspected flaky GitHub Actions jobs in owner/repo, last 30 days
+
+CONF  WORKFLOW  JOB                 SHA      SIGNAL                CATEGORY
+0.90  CI        test-node-20-linux  abc1234  failure -> success    flaky-test
+0.85  CI        (workflow)          abc1234  failure -> success    flaky-test
+0.70  Build     integration         def9876  timed_out -> success  infra/network
+0.70  Build     (workflow)          def9876  timed_out -> success  infra/network
+
+Run with --format markdown to create a report for an issue.
 ```
 
-## Quickstart
-
-Scan the current repository, inferred from the local git remote or `gh repo view`:
-
-```bash
-gh flakefinder scan
-```
-
-Scan an explicit repository:
+For a real repository:
 
 ```bash
 gh flakefinder scan --repo owner/repo --days 30 --limit 300
 ```
 
-Use fixture mode for a deterministic demo without GitHub network access:
+## What It Detects
 
-```bash
-gh flakefinder scan --fixture testdata/workflow_runs.json --format table
-gh flakefinder scan --fixture testdata/workflow_runs.json --format json
-gh flakefinder scan --fixture testdata/workflow_runs.json --format markdown
-```
+`gh-flakefinder` reports likely workflow/job-level suspects when recent Actions history shows:
 
-Create an issue-ready report without writing to GitHub:
+- same run/job rerun where a failed job later passed
+- same `head_sha + workflow + job_name` with `failure -> success`
+- same `head_sha + workflow` with `failure -> success`
+- `timed_out -> success` patterns that may point to runner, network, or dependency instability
+- low-confidence `cancelled -> success` patterns only when the confidence threshold allows them
 
-```bash
-gh flakefinder issue --repo owner/repo --days 30 --dry-run
-```
+Every suspect includes direct GitHub evidence links.
 
-Actually creating an issue requires the explicit write flag:
+## What It Does Not Detect
 
-```bash
-gh flakefinder issue --repo owner/repo --days 30 --create --label flaky-ci
-```
+This is a heuristic detector, not a flaky-test oracle. It does not:
+
+- prove a specific test case is flaky
+- parse logs, JUnit XML, pytest output, Jest output, or Go test output in v0.1
+- detect failures that were never rerun or never followed by success
+- modify workflow files
+- rerun jobs
+- create issues unless `issue --create` is passed explicitly
 
 ## Commands
 
@@ -69,7 +92,7 @@ gh flakefinder issue --repo owner/repo --days 30 --create --label flaky-ci
 gh flakefinder scan [flags]
 ```
 
-Flags:
+Common flags:
 
 ```text
 --repo owner/repo            Repository to scan; default is inferred from the current directory.
@@ -85,57 +108,71 @@ Flags:
 ### `issue`
 
 ```bash
-gh flakefinder issue [flags]
+gh flakefinder issue --repo owner/repo --days 30 --dry-run
 ```
 
-`issue` reuses the scan flags and renders the Markdown report as an issue body. It defaults to dry-run output. GitHub writes only happen when `--create` is present.
+`issue` reuses the scan flags and renders the Markdown report as an issue body. It defaults to dry-run output. GitHub writes only happen when `--create` is present:
 
-## Example Output
-
-```text
-Suspected flaky GitHub Actions jobs in owner/repo, last 30 days
-
-CONF  WORKFLOW  JOB                 SHA      SIGNAL                CATEGORY
-0.90  CI        test-node-20-linux  abc1234  failure -> success    flaky-test
-0.85  CI        (workflow)          abc1234  failure -> success    flaky-test
-0.70  Build     integration         def9876  timed_out -> success  infra/network
-0.70  Build     (workflow)          def9876  timed_out -> success  infra/network
-
-Run with --format markdown to create a report for an issue.
+```bash
+gh flakefinder issue --repo owner/repo --days 30 --create --label flaky-ci
 ```
 
-## Detection Model
+## Output Formats
 
-The MVP detects workflow/job-level suspects, not exact flaky test cases. It groups recent history by:
+Table is best for terminal scanning:
 
-- Workflow level: `head_sha + workflow_id + event + branch`
-- Job level: `head_sha + workflow_id + job_name`
+```bash
+gh flakefinder scan --repo owner/repo --format table
+```
 
-It then reports failure-like conclusions followed by success:
+JSON is best for scripts:
 
-- `failure -> success`
-- `timed_out -> success`
-- `cancelled -> success`, below the default confidence threshold
+```bash
+gh flakefinder scan --repo owner/repo --format json
+```
 
-Each suspect includes evidence links to the failed and later successful run or job.
+Markdown is best for issues, PR comments, or incident notes:
+
+```bash
+gh flakefinder scan --repo owner/repo --format markdown > flaky-ci.md
+```
+
+See [docs/demo-output.md](docs/demo-output.md) for a fuller example.
 
 ## Permissions
 
-`scan` is read-only. For public repositories, normal GitHub API read access is enough. For private repositories, authenticate `gh` with a token that can read Actions metadata for that repository.
+For public repositories, normal GitHub API read access is enough.
 
-`issue --create` writes to GitHub and requires issue creation permission. Without `--create`, `issue` only prints Markdown locally.
+For private repositories, authenticate `gh` with a token that can read Actions metadata for that repository.
 
-## Limitations
+`issue --create` requires issue creation permission. Without `--create`, `issue` only prints Markdown locally.
 
-- Heuristic suspects are not proof of a flaky test.
-- The tool does not modify workflow files or rerun jobs.
-- The MVP does not parse logs or JUnit reports.
-- Runs that were never rerun may be missed.
-- GitHub API rate limits and repository permissions can limit live scans.
+## Documentation
 
-See [docs/algorithm.md](docs/algorithm.md) and [docs/limitations.md](docs/limitations.md) for details.
+- [30-second demo](docs/demo.md)
+- [Demo output](docs/demo-output.md)
+- [Maintainer FAQ](docs/maintainer-faq.md)
+- [Social posts](docs/social-posts.md)
+- [Repository settings](docs/repo-settings.md)
+- [Algorithm](docs/algorithm.md)
+- [Limitations](docs/limitations.md)
+- [Release notes](docs/release-notes-v0.1.0.md)
 
 ## Development
+
+Run the release gate:
+
+```bash
+scripts/verify.sh
+```
+
+On Windows:
+
+```powershell
+.\scripts\verify.ps1
+```
+
+Core commands:
 
 ```bash
 go test ./...
@@ -145,20 +182,17 @@ go build -o gh-flakefinder ./cmd/gh-flakefinder
 ./gh-flakefinder scan --fixture testdata/workflow_runs.json --format markdown
 ```
 
-If `gh` is installed:
-
-```bash
-gh extension install .
-gh flakefinder scan --fixture testdata/workflow_runs.json --format table
-```
-
 ## Release
 
-Push a tag to build release binaries:
+`v0.1.0` is published at:
+
+https://github.com/Frank-Li-Yixuan/gh-flakefinder/releases/tag/v0.1.0
+
+Future releases are built by pushing a tag:
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.1.1
+git push origin v0.1.1
 ```
 
 The release workflow uses `cli/gh-extension-precompile` to publish precompiled binaries for supported platforms.
